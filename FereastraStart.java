@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -44,16 +45,19 @@ public class FereastraStart extends JFrame implements ActionListener {
     private JLabel label7;
     private JComboBox comboOrdonare1;
     private Agenda agenda;
-
     private JLabel labelReclama;
+    private JMenuItem itemFisier;
 
     ImageIcon superbet;
     ImageIcon casa_pariurilor;
     ImageIcon betfair;
 
+    private JFileChooser fileChooser;
+
+
     private void reclama(ImageIcon imageIcon) {
         Image image = imageIcon.getImage();
-        Image newimg = image.getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
+        Image newimg = image.getScaledInstance(750, 90, java.awt.Image.SCALE_SMOOTH);
         labelReclama.setIcon(new ImageIcon(newimg));
     }
     public FereastraStart(Agenda agenda) throws IOException{
@@ -85,16 +89,23 @@ public class FereastraStart extends JFrame implements ActionListener {
 
         Timer timer = new Timer();
 
-        timer.schedule(reclamasuperbet, 0, 10000);
-        timer.schedule(reclamacasa_pariurilor, 5000, 10000);
-        timer.schedule(reclamabetfair, 10000, 10000);
+
+        timer.schedule(reclamasuperbet, 0, 15000);
+        timer.schedule(reclamacasa_pariurilor, 5000, 15000);
+        timer.schedule(reclamabetfair, 10000, 15000);
 
         this.agenda = agenda;
         setTitle("Agenda Telefonica");
-        setBounds(300,90,900, 600);
+        setBounds(300,0,900, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
         c = getContentPane();
         c.setLayout(null);
+
+        labelReclama = new JLabel();
+        labelReclama.setSize(800, 100);
+        labelReclama.setLocation(50, 600);
+        c.add(labelReclama);
 
         title = new JLabel("Agenda Telefonica");
         title.setFont(new Font("Arial", Font.PLAIN, 30));
@@ -105,21 +116,22 @@ public class FereastraStart extends JFrame implements ActionListener {
         menuBar = new JMenuBar();
 
         menuFisier = new JMenu("Fisier");
-        menuEditare = new JMenu("Editare");
         menuAjutor = new JMenu("Ajutor");
 
         itemIesire = new JMenuItem("Iesire");
+        itemFisier = new JMenuItem("Fisier");
         itemAjutor = new JMenuItem("Ajutor");
         itemDespre = new JMenuItem("Despre");
         itemAdaugaUsers = new JMenuItem("Adauga User");
+        itemIesire.addActionListener(this);
+        itemFisier.addActionListener(this);
 
         menuFisier.add(itemIesire);
-        menuEditare.add(itemAdaugaUsers);
+        menuFisier.add(itemFisier);
         menuAjutor.add(itemAjutor);
         menuAjutor.add(itemDespre);
 
         menuBar.add(menuFisier);
-        menuBar.add(menuEditare);
         menuBar.add(menuAjutor);
 
         setJMenuBar(menuBar);
@@ -231,7 +243,21 @@ public class FereastraStart extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+
+
     public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == itemFisier) {
+            File f = new File("C:\\Users\\alex\\IdeaProjects\\AgendaTelefonie\\");
+            JFileChooser fileChooser = new JFileChooser(f, FileSystemView.getFileSystemView());
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.setDialogTitle("Specify a file to save");
+            int userSelection = fileChooser.showSaveDialog(this);
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+            }
+        }
+
         if (e.getSource() == itemIesire) {
             System.exit(0);
         }
